@@ -1,0 +1,20 @@
+{
+  "name": "interview-practice",
+  "version": "1.0.0",
+  "description": "a web app for practicing questions from various sites like Leetcode, Hackerrank",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Subhajit Nandi",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "env-var": "^6.0.1",
+    "express": "^4.17.1",
+    "google-spreadsheet": "^3.0.8",
+    "mongoose": "^5.9.2"
+  }
+}
