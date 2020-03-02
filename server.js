@@ -43,8 +43,6 @@ app.get('/repopulate_questions', async (req, res) => {
 		const ZERO_BASED_USER_COLUMN_START = env.get('ZERO_BASED_USER_COLUMN_START').asInt()
 		const ZERO_BASED_USER_COLUMN_END = env.get('ZERO_BASED_USER_COLUMN_END').asInt()
 
-		console.log(sheet)
-
 		let startRowA1Index = ZERO_BASED_ROW_INDEX_START + 1
 		let endRowA1Index = ZERO_BASED_ROW_INDEX_END + 1
 		let startColumnA1Index = String.fromCharCode(65)
@@ -68,7 +66,8 @@ app.get('/repopulate_questions', async (req, res) => {
 					solutions.push({ link: solution, user_column: String.fromCharCode(65 + j) })
 				}
 			}
-			await Question.create({ name, row, link, category, difficulty, solutions })
+			let createdQuestion = await Question.create({ name, row, link, category, difficulty, solutions })
+			console.log(createdQuestion)
 		}
 		res.json('Done')
 	} catch (err) {
