@@ -28,8 +28,9 @@ const User = require('./models/user')
 const Question = require('./models/question')
 
 app.get('/repopulate_questions', async (req, res) => {
-	await Question.collection.drop()
 	try {
+		await Question.collection.drop()
+
 		await doc.useServiceAccountAuth({
 			client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
 			private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') /* giving error in .env file due to newlines */
@@ -68,29 +69,33 @@ app.get('/repopulate_questions', async (req, res) => {
 			await Question.create({ name, row, link, category, difficulty, solutions })
 		}
 		res.json('Done')
-	} catch (e) {
-		res.json(e)
+	} catch (err) {
+		if (err.message !== 'ns not found') {
+			res.json({ error: err.message })
+		}
 	}
 })
 
 app.get('/repopulate_users', async (req, res) => {
-	await User.collection.drop()
-	const users = [
-		{ name: 'Anubhav', column: 'E' },
-		{ name: 'Subhajit', column: 'F' },
-		{ name: 'Manas', column: 'G' },
-		{ name: 'Abhimanyu', column: 'H' },
-		{ name: 'Sourabh', column: 'I' },
-		{ name: 'Akshat', column: 'J' },
-		{ name: 'Mohit', column: 'K' },
-		{ name: 'Samrat', column: 'L' }
-	]
-
 	try {
+		await User.collection.drop()
+		const users = [
+			{ name: 'Anubhav', column: 'E' },
+			{ name: 'Subhajit', column: 'F' },
+			{ name: 'Manas', column: 'G' },
+			{ name: 'Abhimanyu', column: 'H' },
+			{ name: 'Sourabh', column: 'I' },
+			{ name: 'Akshat', column: 'J' },
+			{ name: 'Mohit', column: 'K' },
+			{ name: 'Samrat', column: 'L' }
+		]
+
 		await User.create(users)
 		res.json('Done')
-	} catch (e) {
-		res.json(e)
+	} catch (err) {
+		if (err.message !== 'ns not found') {
+			res.json({ error: err.message })
+		}
 	}
 })
 
@@ -98,8 +103,8 @@ app.get('/users', async (req, res) => {
 	try {
 		let foundUsers = await User.find({}, { _id: 0, __v: 0 })
 		res.json(foundUsers)
-	} catch (e) {
-		res.json(e)
+	} catch (err) {
+		res.json({ error: err.message })
 	}
 })
 
@@ -107,8 +112,8 @@ app.get('/questions', async (req, res) => {
 	try {
 		let foundQuestions = await Question.find({}, { _id: 0, __v: 0 })
 		res.json(foundQuestions)
-	} catch (e) {
-		res.json(e)
+	} catch (err) {
+		res.json({ error: err.message })
 	}
 })
 
@@ -174,8 +179,8 @@ app.post('/questions', async (req, res) => {
 			solutionCell.value = solution_link
 			await solutionCell.save()
 		}
-	} catch (e) {
-		res.json(e)
+	} catch (err) {
+		res.json({ error: err.message })
 	}
 })
 
@@ -216,8 +221,8 @@ app.patch('/questions', async (req, res) => {
 		const solutionCell = sheet.getCellByA1(`${user_column}${rowA1Index}`)
 		solutionCell.value = solution_link
 		await solutionCell.save()
-	} catch (e) {
-		res.json(e)
+	} catch (err) {
+		res.json({ error: err.message })
 	}
 })
 
