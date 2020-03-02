@@ -93,7 +93,9 @@ app.get('/repopulate_users', async (req, res) => {
 			{ name: 'Sourabh', column: 'I' },
 			{ name: 'Akshat', column: 'J' },
 			{ name: 'Mohit', column: 'K' },
-			{ name: 'Samrat', column: 'L' }
+			{ name: 'Samrat', column: 'L' },
+			{ name: 'Aniket', column: 'M' },
+			{ name: 'Bhavya', column: 'N' }
 		]
 
 		await User.create(users)
