@@ -8,7 +8,7 @@ const env = require('env-var')
 const doc = new GoogleSpreadsheet(process.env.SHEET_ID)
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.MLAB_URI || 'mongodb://localhost:27017/interview-practice', {
+mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/interview-practice', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 })
