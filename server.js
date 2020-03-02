@@ -50,6 +50,13 @@ app.get('/repopulate_questions', async (req, res) => {
 
 		await sheet.loadCells(`${startColumnA1Index}${startRowA1Index}:${endColumnA1Index}${endRowA1Index}`)
 
+		res.json('Done')
+		/* sending response here because fucking heroku doesn't wait long enough to complete
+		the database operations so it timeouts the request which makes it seem like I have an error in the code,
+		but actually what I lack is money to buy dynos.
+		This bug cost me several hours of debugging.
+		Hope it will help --ME-- in the future. */
+
 		let name, row, link, category, difficulty
 		let solutions = []
 
@@ -68,8 +75,6 @@ app.get('/repopulate_questions', async (req, res) => {
 			}
 			await Question.create({ name, row, link, category, difficulty, solutions })
 		}
-		console.log('Done')
-		res.json('Done')
 	} catch (err) {
 		if (err.message !== 'ns not found') {
 			res.json({ error: err.message })
