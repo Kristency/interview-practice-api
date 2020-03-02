@@ -29,7 +29,7 @@ const Question = require('./models/question')
 
 app.get('/repopulate_questions', async (req, res) => {
 	try {
-		await Question.collection.drop()
+		// await Question.collection.drop()
 
 		await doc.useServiceAccountAuth({
 			client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -72,45 +72,6 @@ app.get('/repopulate_questions', async (req, res) => {
 	} catch (err) {
 		if (err.message !== 'ns not found') {
 			res.json({ error: err.message })
-		} else {
-			await doc.useServiceAccountAuth({
-				client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-				private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n') /* giving error in .env file due to newlines */
-			})
-			await doc.loadInfo()
-			const sheet = doc.sheetsByIndex[0]
-
-			const ZERO_BASED_ROW_INDEX_START = env.get('ZERO_BASED_ROW_INDEX_START').asInt()
-			const ZERO_BASED_ROW_INDEX_END = env.get('ZERO_BASED_ROW_INDEX_END').asInt()
-			const ZERO_BASED_USER_COLUMN_START = env.get('ZERO_BASED_USER_COLUMN_START').asInt()
-			const ZERO_BASED_USER_COLUMN_END = env.get('ZERO_BASED_USER_COLUMN_END').asInt()
-
-			let startRowA1Index = ZERO_BASED_ROW_INDEX_START + 1
-			let endRowA1Index = ZERO_BASED_ROW_INDEX_END + 1
-			let startColumnA1Index = String.fromCharCode(65)
-			let endColumnA1Index = String.fromCharCode(65 + ZERO_BASED_USER_COLUMN_END)
-
-			await sheet.loadCells(`${startColumnA1Index}${startRowA1Index}:${endColumnA1Index}${endRowA1Index}`)
-
-			let name, row, link, category, difficulty
-			let solutions = []
-
-			for (let i = ZERO_BASED_ROW_INDEX_START; i <= ZERO_BASED_ROW_INDEX_END; i++) {
-				name = sheet.getCell(i, 0).value
-				row = i + 1
-				link = sheet.getCell(i, 1).value
-				category = sheet.getCell(i, 2).value
-				difficulty = sheet.getCell(i, 3).value
-				solutions = []
-				for (let j = ZERO_BASED_USER_COLUMN_START; j <= ZERO_BASED_USER_COLUMN_END; j++) {
-					solution = sheet.getCell(i, j).value
-					if (solution) {
-						solutions.push({ link: solution, user_column: String.fromCharCode(65 + j) })
-					}
-				}
-				await Question.create({ name, row, link, category, difficulty, solutions })
-			}
-			res.json('Done')
 		}
 	}
 })
@@ -134,20 +95,6 @@ app.get('/repopulate_users', async (req, res) => {
 	} catch (err) {
 		if (err.message !== 'ns not found') {
 			res.json({ error: err.message })
-		} else {
-			const users = [
-				{ name: 'Anubhav', column: 'E' },
-				{ name: 'Subhajit', column: 'F' },
-				{ name: 'Manas', column: 'G' },
-				{ name: 'Abhimanyu', column: 'H' },
-				{ name: 'Sourabh', column: 'I' },
-				{ name: 'Akshat', column: 'J' },
-				{ name: 'Mohit', column: 'K' },
-				{ name: 'Samrat', column: 'L' }
-			]
-
-			await User.create(users)
-			res.json('Done')
 		}
 	}
 })
