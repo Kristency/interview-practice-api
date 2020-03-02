@@ -29,7 +29,7 @@ const Question = require('./models/question')
 
 app.get('/repopulate_questions', async (req, res) => {
 	try {
-		// await Question.collection.drop()
+		await Question.collection.drop()
 
 		await doc.useServiceAccountAuth({
 			client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -66,9 +66,9 @@ app.get('/repopulate_questions', async (req, res) => {
 					solutions.push({ link: solution, user_column: String.fromCharCode(65 + j) })
 				}
 			}
-			let createdQuestion = await Question.create({ name, row, link, category, difficulty, solutions })
-			console.log(createdQuestion)
+			await Question.create({ name, row, link, category, difficulty, solutions })
 		}
+		console.log('Done')
 		res.json('Done')
 	} catch (err) {
 		if (err.message !== 'ns not found') {
