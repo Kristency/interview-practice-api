@@ -43,7 +43,7 @@ app.get('/repopulate_questions', async (req, res) => {
 		const ZERO_BASED_USER_COLUMN_START = env.get('ZERO_BASED_USER_COLUMN_START').asInt()
 		const ZERO_BASED_USER_COLUMN_END = env.get('ZERO_BASED_USER_COLUMN_END').asInt()
 
-		console.log(ZERO_BASED_ROW_INDEX_END)
+		console.log(sheet)
 
 		let startRowA1Index = ZERO_BASED_ROW_INDEX_START + 1
 		let endRowA1Index = ZERO_BASED_ROW_INDEX_END + 1
