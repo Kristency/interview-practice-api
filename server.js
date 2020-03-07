@@ -4,15 +4,15 @@ require('dotenv').config()
 const cors = require('cors')
 
 const mongoose = require('mongoose')
-// mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/interview-practice', {
-// 	useNewUrlParser: true,
-// 	useUnifiedTopology: true
-// })
-
-mongoose.connect('mongodb://localhost:27017/interview-practice', {
+mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/interview-practice', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true
 })
+
+// mongoose.connect('mongodb://localhost:27017/interview-practice', {
+// 	useNewUrlParser: true,
+// 	useUnifiedTopology: true
+// })
 
 const PORT = process.env.PORT || 8080
 
