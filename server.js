@@ -4,16 +4,15 @@ require('dotenv').config()
 const cors = require('cors')
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/interview-practice', {
-	useNewUrlParser: true,
-	useUnifiedTopology: true
-})
-
-// mongoose.connect('mongodb://localhost:27017/interview-practice', {
-// 	/*useCreateIndex: true,*/
+// mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/interview-practice', {
 // 	useNewUrlParser: true,
 // 	useUnifiedTopology: true
 // })
+
+mongoose.connect('mongodb://localhost:27017/interview-practice', {
+	useNewUrlParser: true,
+	useUnifiedTopology: true
+})
 
 const PORT = process.env.PORT || 8080
 
@@ -37,6 +36,9 @@ app.get('/users', async (req, res) => {
 	}
 })
 
+/* this route stops working after call to /repopulate_questions route.
+	To make it work again, deploy the server again on heroku every time you repopulate the db.
+	I know, it sucks. */
 app.get('/search', async (req, res) => {
 	let { search_query } = req.query
 	try {
