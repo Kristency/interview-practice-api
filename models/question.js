@@ -4,7 +4,7 @@ const mongoose_fuzzy_searching = require('mongoose-fuzzy-searching')
 const questionSchema = new mongoose.Schema(
 	{
 		_id: Number,
-		name: { type: String, text: true },
+		name: String,
 		link: String,
 		category: String,
 		difficulty: String,
