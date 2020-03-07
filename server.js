@@ -10,6 +10,7 @@ mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/interview
 })
 
 // mongoose.connect('mongodb://localhost:27017/interview-practice', {
+// 	/*useCreateIndex: true,*/
 // 	useNewUrlParser: true,
 // 	useUnifiedTopology: true
 // })
