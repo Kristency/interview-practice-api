@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const env = require('env-var')
 
 const Question = require('../models/question')
 
@@ -11,6 +12,9 @@ On the other hand, PUT, POST, etc. routes generally should not use lean(). */
 
 router.get('/', async (req, res) => {
 	let dbQuery = {}
+	if ('start_row' in req.query && 'end_row' in req.query) {
+		dbQuery['_id'] = { $gte: req.query.start_row, $lte: req.query.end_row }
+	}
 	if ('category' in req.query) {
 		dbQuery['category'] = req.query.category
 	}
@@ -21,6 +25,15 @@ router.get('/', async (req, res) => {
 	try {
 		let foundQuestions = await Question.find(dbQuery, { __v: 0, name_fuzzy: 0 }).lean()
 		res.json(foundQuestions)
+	} catch (err) {
+		res.json({ error: err.message })
+	}
+})
+
+router.get('/count', async (req, res) => {
+	try {
+		const count = await Question.countDocuments({})
+		res.json(count)
 	} catch (err) {
 		res.json({ error: err.message })
 	}
