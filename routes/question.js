@@ -78,7 +78,7 @@ router.post('/', async (req, res) => {
 				'Problem Name': name,
 				'Problem Link': problem_link,
 				Category: category,
-				Difficulty: difficulty
+				Difficulty: difficulty,
 			})
 			let newRowA1Index = newRow.rowIndex
 			// console.log(typeof newRowA1Index)
@@ -99,7 +99,7 @@ router.post('/', async (req, res) => {
 	}
 })
 
-router.patch('/', async (req, res) => {
+router.patch('/add_solution', async (req, res) => {
 	let { _id, user_column, solution_link } = req.body
 
 	try {
@@ -116,7 +116,11 @@ router.patch('/', async (req, res) => {
 		if (flag === true) {
 			res.json(foundQuestion)
 		} else {
-			let updatedQuestion = await Question.findByIdAndUpdate(_id, { $push: { solutions: { link: solution_link, user_column } } })
+			let updatedQuestion = await Question.findByIdAndUpdate(
+				_id,
+				{ $push: { solutions: { link: solution_link, user_column } } },
+				{ new: true }
+			)
 			res.json(updatedQuestion)
 		}
 
@@ -126,6 +130,25 @@ router.patch('/', async (req, res) => {
 		const solutionCell = sheet.getCellByA1(`${user_column}${rowA1Index}`)
 		solutionCell.value = solution_link
 		await solutionCell.save()
+	} catch (err) {
+		res.json({ error: err.message })
+	}
+})
+
+router.patch('/update_question', async (req, res) => {
+	let { _id, name, problem_link: link } = req.body
+	try {
+		let updatedQuestion = await Question.findByIdAndUpdate(_id, { name, link }, { new: true })
+		res.json(updatedQuestion)
+
+		const sheet = await initGoogleSheets()
+		let rowA1Index = _id.toString()
+		await sheet.loadCells(`A${rowA1Index}:B${rowA1Index}`)
+		const questionNameCell = sheet.getCellByA1(`A${rowA1Index}`)
+		const questionLinkCell = sheet.getCellByA1(`B${rowA1Index}`)
+		questionNameCell.value = name
+		questionLinkCell.value = link
+		await sheet.saveUpdatedCells() // saves both cells in one API call
 	} catch (err) {
 		res.json({ error: err.message })
 	}
