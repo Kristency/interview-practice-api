@@ -40,8 +40,8 @@ router.get('/count', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-	let { name, problem_link, category, difficulty, user_column, solution_link } = req.body
-	let solutions = [{ link: solution_link, user_column }]
+	let { name, problem_link, category, difficulty, user_column, user_name, solution_link } = req.body
+	let solutions = [{ link: solution_link, user_column, user_name }]
 	let newQuestion = { name, link: problem_link, category, difficulty, solutions }
 	try {
 		let foundQuestion = await Question.findOne({ link: problem_link }, { __v: 0 })
@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
 			} else {
 				let updatedQuestion = await Question.findOneAndUpdate(
 					{ link: problem_link },
-					{ $push: { solutions: { link: solution_link, user_column } } },
+					{ $push: { solutions: { link: solution_link, user_column, user_name } } },
 					{ __v: 0 }
 				)
 
@@ -78,12 +78,13 @@ router.post('/', async (req, res) => {
 				'Problem Name': name,
 				'Problem Link': problem_link,
 				Category: category,
-				Difficulty: difficulty,
+				Difficulty: difficulty
 			})
 			let newRowA1Index = newRow.rowIndex
 			// console.log(typeof newRowA1Index)
 
-			let createdQuestion = await Question.create({ ...newQuestion, _id: newRowA1Index })
+			newQuestion[_id] = newRowA1Index
+			let createdQuestion = await Question.create(newQuestion)
 			delete createdQuestion.__v
 			res.json(createdQuestion)
 
@@ -100,7 +101,7 @@ router.post('/', async (req, res) => {
 })
 
 router.patch('/add_solution', async (req, res) => {
-	let { _id, user_column, solution_link } = req.body
+	let { _id, user_column, solution_link, user_name } = req.body
 
 	try {
 		let foundQuestion = await Question.findById(_id)
@@ -118,7 +119,7 @@ router.patch('/add_solution', async (req, res) => {
 		} else {
 			let updatedQuestion = await Question.findByIdAndUpdate(
 				_id,
-				{ $push: { solutions: { link: solution_link, user_column } } },
+				{ $push: { solutions: { link: solution_link, user_column, user_name } } },
 				{ new: true }
 			)
 			res.json(updatedQuestion)

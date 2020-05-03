@@ -27,10 +27,11 @@ const Question = require('./models/question')
 const questionRoutes = require('./routes/question')
 const seedRoutes = require('./routes/seeds')
 
-app.get('/users', async (req, res) => {
+app.get('/user', async (req, res) => {
+	let { email } = req.query
 	try {
-		let foundUsers = await User.find({}, { __v: 0 }).lean()
-		res.json(foundUsers)
+		let foundUser = await User.findOne({ email }, { __v: 0 }).lean()
+		res.json(foundUser)
 	} catch (err) {
 		res.json({ error: err.message })
 	}

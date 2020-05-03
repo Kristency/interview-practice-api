@@ -12,7 +12,8 @@ const questionSchema = new mongoose.Schema(
 			{
 				_id: false,
 				link: String,
-				user_column: String
+				user_column: String,
+				user_name: String
 			}
 		]
 	},

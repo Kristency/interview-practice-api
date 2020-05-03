@@ -24,6 +24,8 @@ router.get('/repopulate_questions', async (req, res) => {
 		let startColumnA1Index = String.fromCharCode(65)
 		let endColumnA1Index = String.fromCharCode(65 + ZERO_BASED_USER_COLUMN_END)
 
+		// for usernames
+		await sheet.loadCells(`${startColumnA1Index}1:${endColumnA1Index}1`)
 		await sheet.loadCells(`${startColumnA1Index}${startRowA1Index}:${endColumnA1Index}${endRowA1Index}`)
 
 		res.json('Done')
@@ -45,8 +47,9 @@ router.get('/repopulate_questions', async (req, res) => {
 			solutions = []
 			for (let j = ZERO_BASED_USER_COLUMN_START; j <= ZERO_BASED_USER_COLUMN_END; j++) {
 				solution = sheet.getCell(i, j).value
+				user_name = sheet.getCell(0, j).value
 				if (solution) {
-					solutions.push({ link: solution, user_column: String.fromCharCode(65 + j) })
+					solutions.push({ link: solution, user_column: String.fromCharCode(65 + j), user_name })
 				}
 			}
 			await Question.create({ name, _id, link, category, difficulty, solutions })
@@ -62,16 +65,16 @@ router.get('/repopulate_users', async (req, res) => {
 	try {
 		await User.collection.drop()
 		const users = [
-			{ name: 'Anubhav', _id: 'E' },
-			{ name: 'Subhajit', _id: 'F' },
-			{ name: 'Manas', _id: 'G' },
-			{ name: 'Abhimanyu', _id: 'H' },
-			{ name: 'Sourabh', _id: 'I' },
-			{ name: 'Akshat', _id: 'J' },
-			{ name: 'Mohit', _id: 'K' },
-			{ name: 'Samrat', _id: 'L' },
-			{ name: 'Aniket', _id: 'M' },
-			{ name: 'Bhavya', _id: 'N' }
+			{ email: '17ucc071@lnmiit.ac.in', name: 'Anubhav', _id: 'E' },
+			{ email: '17ucs160@lnmiit.ac.in', name: 'Subhajit', _id: 'F' },
+			{ email: '17ucs081@lnmiit.ac.in', name: 'Manas', _id: 'G' },
+			{ email: '17ucs005@lnmiit.ac.in', name: 'Abhimanyu', _id: 'H' },
+			{ email: '17ucs159@lnmiit.ac.in', name: 'Sourabh', _id: 'I' },
+			{ email: '17ucc011@lnmiit.ac.in', name: 'Akshat', _id: 'J' },
+			{ email: '17dcs007@lnmiit.ac.in', name: 'Mohit', _id: 'K' },
+			{ email: '17ucs136@lnmiit.ac.in', name: 'Samrat', _id: 'L' },
+			{ email: '17uec020@lnmiit.ac.in', name: 'Aniket', _id: 'M' },
+			{ email: '17ucs046@lnmiit.ac.in', name: 'Bhavya', _id: 'N' }
 		]
 
 		await User.create(users)
