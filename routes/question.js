@@ -22,18 +22,22 @@ router.get('/', async (req, res) => {
 		dbQuery['difficulty'] = req.query.difficulty
 	}
 
+	// for initial call to get question count
+	let init_question_count = false
+	let questionCount = 0
 	try {
-		let foundQuestions = await Question.find(dbQuery, { __v: 0, name_fuzzy: 0 }).lean()
-		res.json(foundQuestions)
-	} catch (err) {
-		res.json({ error: err.message })
-	}
-})
+		if ('init_question_count' in req.query) {
+			init_question_count = true
+			questionCount = await Question.estimatedDocumentCount()
+			dbQuery['_id'] = { $gte: questionCount - 29, $lte: questionCount + 1 }
+		}
 
-router.get('/count', async (req, res) => {
-	try {
-		const count = await Question.countDocuments({})
-		res.json(count)
+		let foundQuestions = await Question.find(dbQuery, { __v: 0, name_fuzzy: 0 }).lean()
+		if (init_question_count) {
+			res.json({ questions: foundQuestions, questionCount })
+		} else {
+			res.json(foundQuestions)
+		}
 	} catch (err) {
 		res.json({ error: err.message })
 	}
@@ -80,10 +84,10 @@ router.post('/', async (req, res) => {
 				Category: category,
 				Difficulty: difficulty
 			})
-			let newRowA1Index = newRow.rowIndex
+			let newRowA1Index = newRow.rowIndex.toString()
 			// console.log(typeof newRowA1Index)
 
-			newQuestion[_id] = newRowA1Index
+			newQuestion['_id'] = newRowA1Index
 			let createdQuestion = await Question.create(newQuestion)
 			delete createdQuestion.__v
 			res.json(createdQuestion)

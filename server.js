@@ -6,12 +6,14 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/interview-practice', {
 	useNewUrlParser: true,
-	useUnifiedTopology: true
+	useUnifiedTopology: true,
+	useCreateIndex: true
 })
 
 // mongoose.connect('mongodb://localhost:27017/interview-practice', {
 // 	useNewUrlParser: true,
-// 	useUnifiedTopology: true
+// 	useUnifiedTopology: true,
+// 	useCreateIndex: true
 // })
 
 const PORT = process.env.PORT || 8080
