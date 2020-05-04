@@ -21,6 +21,11 @@ router.get('/', async (req, res) => {
 	if ('difficulty' in req.query) {
 		dbQuery['difficulty'] = req.query.difficulty
 	}
+	if ('unsolved_questions' in req.query) {
+		dbQuery['solutions.user_column'] = { $ne: req.query.user_column }
+	}
+
+	// console.log(dbQuery)
 
 	// for initial call to get question count
 	let init_question_count = false
