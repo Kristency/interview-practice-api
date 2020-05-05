@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
 		if ('init_question_count' in req.query) {
 			init_question_count = true
 			questionCount = await Question.estimatedDocumentCount()
-			dbQuery['_id'] = { $gte: questionCount - 20, $lte: questionCount }
+			dbQuery['_id'] = { $gte: questionCount - 18, $lte: questionCount + 1 }
 		}
 
 		let foundQuestions = await Question.find(dbQuery, { __v: 0, name_fuzzy: 0 }).lean()
