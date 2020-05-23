@@ -7,13 +7,15 @@ const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASEURL || 'mongodb://localhost:27017/interview-practice', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
-	useCreateIndex: true
+	useCreateIndex: true,
+	useFindAndModify: false
 })
 
 // mongoose.connect('mongodb://localhost:27017/interview-practice', {
 // 	useNewUrlParser: true,
 // 	useUnifiedTopology: true,
-// 	useCreateIndex: true
+// 	useCreateIndex: true,
+// 	useFindAndModify: false
 // })
 
 const PORT = process.env.PORT || 8080
